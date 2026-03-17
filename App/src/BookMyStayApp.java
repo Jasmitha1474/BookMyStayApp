@@ -1,40 +1,54 @@
-import static java.lang.IO.println;
-//Use Case 2: Basic Room Types & Static Availability
+//Use Case 3: Centralized Room Inventory Management
 
-abstract class Room {
+import java.util.HashMap;
+import java.util.Map;
 
-    // Attributes
-    protected int numberOfBeds;
-    protected int squareFeet;
-    protected double pricePerNight;
+public class BookMyStayApp {
+    // Stores available room count for each room type
+    private Map<String, Integer> roomAvailability;
 
     // Constructor
-    public Room(int numberOfBeds, int squareFeet, double pricePerNight) {
-        this.numberOfBeds = numberOfBeds;
-        this.squareFeet = squareFeet;
-        this.pricePerNight = pricePerNight;
+    public BookMyStayApp() {
+        roomAvailability = new HashMap<>();
+        initializeInventory();
     }
 
-    // Method to display details
-    public void displayRoomDetails() {
-        System.out.println("Number of Beds: " + numberOfBeds);
-        System.out.println("Room Size (sq ft): " + squareFeet);
-        System.out.println("Price per Night: " + pricePerNight);
+    // Initialize default room availability
+    private void initializeInventory() {
+        roomAvailability.put("SingleRoom", 10);
+        roomAvailability.put("DoubleRoom", 8);
+        roomAvailability.put("DeluxeRoom", 5);
+        roomAvailability.put("SuiteRoom", 2);
     }
-}
 
-// Child class
-class DeluxeRoom extends Room {
-
-    public DeluxeRoom() {
-        super(2, 400, 2500.0);
+    // Get availability map
+    public Map<String, Integer> getRoomAvailability() {
+        return roomAvailability;
     }
-}
 
-// Main class
-public class BookMyStayApp {
+    // Update availability
+    public void updateAvailability(String roomType, int count) {
+        roomAvailability.put(roomType, count);
+    }
+
+    // Display inventory
+    public void displayInventory() {
+        System.out.println("Room Availability:");
+        for (Map.Entry<String, Integer> entry : roomAvailability.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+
+    // Main method (for testing)
     public static void main(String[] args) {
-        Room room = new DeluxeRoom();
-        room.displayRoomDetails();
+        BookMyStayApp inventory = new BookMyStayApp();
+
+        inventory.displayInventory();
+
+        System.out.println("\nUpdating DeluxeRoom availability...\n");
+        inventory.updateAvailability("DeluxeRoom", 3);
+
+        inventory.displayInventory();
     }
 }
+
