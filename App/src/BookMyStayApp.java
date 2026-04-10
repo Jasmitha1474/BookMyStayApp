@@ -1,6 +1,7 @@
 //Use Case 4: Room Search & Availability Check
 
-import static java.lang.IO.println;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.*;
 
@@ -121,3 +122,4 @@ public class BookMyStayApp {
         searchService.searchAvailableRooms();
     }
 }
+
