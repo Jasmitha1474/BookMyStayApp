@@ -1,8 +1,8 @@
-// UC6 - Reservation Confirmation & Room Allocation
+//Use Case 5: Booking Request
 
 import java.util.*;
 
-// Reservation class (same as UC5)
+// Reservation class represents a booking request
 class Reservation {
     private String guestName;
     private String roomType;
@@ -25,32 +25,74 @@ class Reservation {
     public int getNights() {
         return nights;
     }
+
+    @Override
+    public String toString() {
+        return "Guest: " + guestName +
+                ", Room Type: " + roomType +
+                ", Nights: " + nights;
+    }
 }
 
-// Inventory Service
-class InventoryService {
-    private Map<String, Integer> inventory;
+// Booking Request Queue handler
+class BookingRequestQueue {
+    private Queue<Reservation> queue;
 
-    public InventoryService() {
-        inventory = new HashMap<>();
-        inventory.put("Single", 2);
-        inventory.put("Double", 2);
-        inventory.put("Suite", 1);
+    public BookingRequestQueue() {
+        queue = new LinkedList<>(); // FIFO Queue
     }
 
-    public boolean isAvailable(String roomType) {
-        return inventory.getOrDefault(roomType, 0) > 0;
+    // Add booking request
+    public void addRequest(Reservation reservation) {
+        queue.offer(reservation);
+        System.out.println("Booking request added for " + reservation.getGuestName());
     }
 
-    public void decrement(String roomType) {
-        inventory.put(roomType, inventory.get(roomType) - 1);
-    }
-
-    public void displayInventory() {
-        System.out.println("\nCurrent Inventory:");
-        for (String type : inventory.keySet()) {
-            System.out.println(type + " Rooms Left: " + inventory.get(type));
+    // View all requests (no processing)
+    public void viewRequests() {
+        if (queue.isEmpty()) {
+            System.out.println("No booking requests in queue.");
+            return;
         }
+
+        System.out.println("\n--- Booking Request Queue (FIFO Order) ---");
+        for (Reservation r : queue) {
+            System.out.println(r);
+        }
+    }
+}
+
+// Main class
+public class BookMyStayApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        BookingRequestQueue bookingQueue = new BookingRequestQueue();
+
+        System.out.print("Enter number of booking requests: ");
+        int n = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for request " + (i + 1));
+
+            System.out.print("Guest Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Room Type: ");
+            String roomType = sc.nextLine();
+
+            System.out.print("Number of Nights: ");
+            int nights = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            Reservation reservation = new Reservation(name, roomType, nights);
+            bookingQueue.addRequest(reservation);
+        }
+
+        // Display queue
+        bookingQueue.viewRequests();
+
+        sc.close();
     }
 }
 
